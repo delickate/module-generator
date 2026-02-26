@@ -1,0 +1,30 @@
+{
+    "name": "delickate/module-generator",
+    "description": "Lightweight Laravel module generator",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sani Hyne",
+            "email": "delickate@hotmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8.0",
+        "illuminate/contracts": "^8.0|^9.0|^10.0|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Delickate\\ModuleGenerator\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Delickate\\ModuleGenerator\\ModuleGeneratorServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
