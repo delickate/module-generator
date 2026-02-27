@@ -16,7 +16,10 @@
     "autoload": {
         "psr-4": {
             "Delickate\\ModuleGenerator\\": "src/"
-        }
+        },
+        "files": [
+        "src/Support/helpers.php"
+    ]
     },
     "extra": {
         "laravel": {
