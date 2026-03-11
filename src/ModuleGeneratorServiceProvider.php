@@ -19,7 +19,7 @@ namespace Delickate\ModuleGenerator;
 
 use Illuminate\Support\ServiceProvider;
 
-# use Delickate\ModuleGenerator\Console\MakeModuleCommand;
+use Delickate\ModuleGenerator\Console\MakeModuleCommand;
 use Delickate\ModuleGenerator\Console\MakeModuleControllerCommand;
 
 
