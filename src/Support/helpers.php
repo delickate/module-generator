@@ -25,7 +25,7 @@ function module_asset($module, $asset)
     return asset('modules/' . strtolower($module) . '/' . $asset);
 }
 
-protected function getModuleStatuses()
+function getModuleStatuses()
 {
     $file = config('modules.statuses_file');
 
