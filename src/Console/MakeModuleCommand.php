@@ -59,9 +59,12 @@ class MakeModuleCommand extends Command
         ];
 
         foreach ($directories as $dir) {
-            mkdir($basePath.'/'.$dir, 0755, true);
+            if (!is_dir($basePath.'/'.$dir)) {
+                mkdir($basePath.'/'.$dir,0755,true);
+            }
         }
     }
+
 
     protected function createFiles($name, $basePath)
     {
