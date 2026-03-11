@@ -19,6 +19,10 @@ namespace Delickate\ModuleGenerator;
 
 use Illuminate\Support\ServiceProvider;
 
+# use Delickate\ModuleGenerator\Console\MakeModuleCommand;
+use Delickate\ModuleGenerator\Console\MakeModuleControllerCommand;
+
+
 class ModuleGeneratorServiceProvider extends ServiceProvider
 {
     public function register()
@@ -31,7 +35,8 @@ class ModuleGeneratorServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) 
         {
             $this->commands([
-                Console\MakeModuleCommand::class,
+                MakeModuleCommand::class,
+                MakeModuleControllerCommand::class,
             ]);
         }
 
