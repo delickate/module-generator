@@ -26,9 +26,20 @@ class ModuleGeneratorServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) 
         {
             $this->commands([
+
                                 Console\MakeModuleCommand::class,
-                                Console\ModuleListCommand::class
+
+                                Console\MakeModuleControllerCommand::class,
+                                Console\MakeModuleModelCommand::class,
+                                Console\MakeModuleMigrationCommand::class,
+
+                                Console\ModuleListCommand::class,
+                                Console\ModuleEnableCommand::class,
+                                Console\ModuleDisableCommand::class,
+                                Console\ModuleDeleteCommand::class,
                             ]);
+
+
         }
 
         $this->loadModules();
@@ -36,13 +47,22 @@ class ModuleGeneratorServiceProvider extends ServiceProvider
 
     protected function loadModules()
     {
-        $modulesPath = base_path('Modules');
+        $modulesPath = config('modules.modules_path');
 
         if (!is_dir($modulesPath)) {
             return;
         }
 
+        $statuses = $this->getModuleStatuses();
+
         foreach (glob($modulesPath.'/*') as $modulePath) {
+
+            $module = basename($modulePath);
+
+            if (!($statuses[$module] ?? true)) {
+                continue;
+            }
+
 
             // load routes
             if (file_exists($modulePath.'/Routes/web.php')) {

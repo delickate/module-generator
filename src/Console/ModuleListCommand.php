@@ -20,7 +20,14 @@ class ModuleListCommand extends Command
         }
 
         foreach ($modules as $module) {
-            $this->line(basename($module));
+
+            $name = basename($module);
+
+            $status = module_enabled($name)
+                ? '<info>Enabled</info>'
+                : '<comment>Disabled</comment>';
+
+            $this->line("$name  -  $status");
         }
     }
 }
