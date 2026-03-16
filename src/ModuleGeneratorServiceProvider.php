@@ -43,6 +43,10 @@ class ModuleGeneratorServiceProvider extends ServiceProvider
         }
 
         $this->loadModules();
+        
+        $this->publishes([
+						    __DIR__.'/../config/modules.php' => config_path('modules.php'),
+						], 'modules-config');
     }
 
     protected function loadModules()
