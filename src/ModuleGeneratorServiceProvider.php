@@ -111,4 +111,12 @@ class ModuleGeneratorServiceProvider extends ServiceProvider
 
         return null;
     }
+    
+    public function register()
+	{
+	    $this->mergeConfigFrom(
+	        __DIR__.'/../config/modules.php',
+	        'modules'
+	    );
+	}
 }
