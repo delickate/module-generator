@@ -49,13 +49,19 @@ function module_enabled($module)
     return $statuses[$module] ?? true;
 }
 
-function set_module_status($module, $status)
+function set_module_status($module, $status = true)
 {
-    $file = config('modules.statuses_file');
+    $file = config('modules.statuses_file') ?: base_path('modules_statuses.json');
 
-    $statuses = file_exists($file)
-        ? json_decode(file_get_contents($file), true)
-        : [];
+    if (!$file) {
+        $file = base_path('modules_statuses.json');
+    }
+
+    if (!file_exists($file)) {
+        file_put_contents($file, json_encode([], JSON_PRETTY_PRINT));
+    }
+
+    $statuses = json_decode(file_get_contents($file), true) ?? [];
 
     $statuses[$module] = $status;
 
