@@ -64,3 +64,22 @@ php artisan module:enable Blog
 php artisan module:disable Blog
 php artisan module:delete Blog
 ```
+
+On hosting app. open composer.json file and add this `"Modules\\": "Modules/",` like 
+
+```bash
+"autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Modules\\": "Modules/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+```
+
+and run following command
+
+```bash
+> composer dump-autoload
+```
