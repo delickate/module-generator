@@ -57,7 +57,7 @@ class ModuleGeneratorServiceProvider extends ServiceProvider
             return;
         }
 
-        $statuses = $this->getModuleStatuses();
+        $statuses = function_exists('getModuleStatuses') ? getModuleStatuses() : [];
 
         foreach (glob($modulesPath.'/*') as $modulePath) {
 
