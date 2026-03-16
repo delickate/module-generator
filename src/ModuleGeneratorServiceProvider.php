@@ -4,7 +4,7 @@
  * Delickate User Sessions Package
  * --------------------------------------------------------------------------
  *
- * @package     Delickate\UserSessions
+ * @package     Delickate\module-generator
  * @author      Sani Hyne 
  * @copyright   Copyright (c) 2026 Delickate
  * @license     MIT
@@ -21,47 +21,92 @@ use Illuminate\Support\ServiceProvider;
 
 class ModuleGeneratorServiceProvider extends ServiceProvider
 {
-    public function register()
-    {
-        //
-    }
-
     public function boot()
     {
         if ($this->app->runningInConsole()) 
         {
             $this->commands([
-                Console\MakeModuleCommand::class,
-            ]);
+
+                                Console\MakeModuleCommand::class,
+
+                                Console\MakeModuleControllerCommand::class,
+                                Console\MakeModuleModelCommand::class,
+                                Console\MakeModuleMigrationCommand::class,
+
+                                Console\ModuleListCommand::class,
+                                Console\ModuleEnableCommand::class,
+                                Console\ModuleDisableCommand::class,
+                                Console\ModuleDeleteCommand::class,
+                            ]);
+
+
         }
 
-        $this->registerModules();
+        $this->loadModules();
     }
 
-    protected function registerModules()
+    protected function loadModules()
     {
-        $modulesPath = base_path('Modules');
+        $modulesPath = config('modules.modules_path');
 
-        if (!is_dir($modulesPath)) 
-        {
+        if (!is_dir($modulesPath)) {
             return;
         }
 
-        foreach (glob($modulesPath . '/*/Providers/*ServiceProvider.php') as $file) {
-            $class = $this->getClassFromFile($file);
-            if ($class && class_exists($class)) {
-                $this->app->register($class);
+        $statuses = $this->getModuleStatuses();
+
+        foreach (glob($modulesPath.'/*') as $modulePath) {
+
+            $module = basename($modulePath);
+
+            if (!($statuses[$module] ?? true)) {
+                continue;
+            }
+
+
+            // load routes
+            if (file_exists($modulePath.'/Routes/web.php')) {
+                $this->loadRoutesFrom($modulePath.'/Routes/web.php');
+            }
+
+            // load migrations
+            if (is_dir($modulePath.'/Database/Migrations')) {
+                $this->loadMigrationsFrom($modulePath.'/Database/Migrations');
+            }
+
+            // load views
+            if (is_dir($modulePath.'/Resources/Views')) {
+                $moduleName = strtolower(basename($modulePath));
+                $this->loadViewsFrom($modulePath.'/Resources/Views', $moduleName);
+            }
+
+            // load configs
+            if (is_dir($modulePath.'/Config')) {
+                foreach (glob($modulePath.'/Config/*.php') as $config) {
+                    $this->mergeConfigFrom(
+                        $config,
+                        basename($config,'.php')
+                    );
+                }
+            }
+
+            // register module providers
+            foreach (glob($modulePath.'/Providers/*ServiceProvider.php') as $provider) {
+                $class = $this->getClassFromFile($provider);
+                if ($class && class_exists($class)) {
+                    $this->app->register($class);
+                }
             }
         }
     }
 
     protected function getClassFromFile($file)
     {
-        $contents = file_get_contents($file);
+        $content = file_get_contents($file);
 
-        if (preg_match('/namespace (.*);/', $contents, $namespace) &&
-            preg_match('/class (\w+)/', $contents, $class)) {
-            return $namespace[1] . '\\' . $class[1];
+        if (preg_match('/namespace (.*);/', $content, $namespace) &&
+            preg_match('/class (\w+)/', $content, $class)) {
+            return $namespace[1].'\\'.$class[1];
         }
 
         return null;
