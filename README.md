@@ -31,4 +31,36 @@ This allows you to organize your app into reusable, maintainable modules — sim
 Install via Composer:
 
 ```bash
-composer require delickate/module-generator
+> composer require delickate/module-generator
+```
+To create new module
+```bash
+> php artisan delickate:module Blog --migration --config
+```
+
+To list modules
+```bash
+> php artisan module:list
+```
+
+To create controller in module
+```bash
+php artisan module:make-controller PostController Blog
+```
+
+To create model in module
+```bash
+php artisan module:make-model Post Blog
+```
+
+To create migrations in module
+```bash
+php artisan module:make-migration create_posts_table Blog
+```
+
+To enable / disable module
+```bash
+php artisan module:enable Blog
+php artisan module:disable Blog
+php artisan module:delete Blog
+```
